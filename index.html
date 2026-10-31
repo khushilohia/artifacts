@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0e0e18">
+<title>Khushi's Lab</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=DM+Sans:wght@300;400&family=JetBrains+Mono:wght@400&display=swap');
+  :root{--bg:#0e0e18;--surface:#18182a;--border:#24243a;--text:#ede8df;--muted:#7777aa;--accent:#FF7B0A;--accent2:#E85B7A;--tag-bg:rgba(255,123,10,0.08)}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased}
+  header{padding:32px 20px 24px;max-width:640px;margin:0 auto;border-bottom:1px solid var(--border)}
+  .site-name{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px;margin-bottom:6px}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block;flex-shrink:0}
+  .site-sub{font-size:13px;color:var(--muted);padding-left:15px}
+  .filters{max-width:640px;margin:0 auto;padding:16px 20px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+  .filter-btn{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:4px 12px;border-radius:20px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;transition:all .15s}
+  .filter-btn:hover{color:var(--text);border-color:#3a3a5a}
+  .filter-btn.active{color:var(--accent);border-color:var(--accent);background:var(--tag-bg)}
+  .list{max-width:640px;margin:0 auto;padding:8px 20px 80px}
+  .month-divider{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;padding:20px 0 8px;display:flex;align-items:center;gap:10px}
+  .month-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+  .artifact{display:flex;align-items:flex-start;gap:16px;padding:16px 0;border-bottom:1px solid var(--border);text-decoration:none;color:inherit;transition:opacity .12s;cursor:pointer}
+  .artifact:hover{opacity:.75}
+  .artifact:hover .artifact-title{color:var(--accent)}
+  .artifact-date{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);min-width:48px;padding-top:3px;text-align:right;flex-shrink:0}
+  .artifact-body{flex:1}
+  .artifact-title{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px;transition:color .12s;display:flex;align-items:center;gap:8px}
+  .artifact-title .ext{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);font-weight:400}
+  .artifact-motive{font-size:12.5px;color:var(--muted);line-height:1.5;margin-bottom:8px}
+  .artifact-tags{display:flex;gap:5px;flex-wrap:wrap}
+  .tag{font-size:11px;font-family:'JetBrains Mono',monospace;padding:2px 8px;border-radius:3px;background:var(--surface);border:1px solid var(--border);color:var(--muted)}
+  .tag.plan{color:#9999ee;border-color:rgba(150,150,230,.25);background:rgba(150,150,230,.06)}
+  .tag.reel{color:var(--accent2);border-color:rgba(232,91,122,.25);background:rgba(232,91,122,.06)}
+  .tag.tool{color:var(--accent);border-color:rgba(255,123,10,.25);background:var(--tag-bg)}
+  .tag.setup{color:#4cd78a;border-color:rgba(76,215,138,.25);background:rgba(76,215,138,.06)}
+  .artifact-arrow{font-size:14px;color:var(--border);padding-top:2px;flex-shrink:0;transition:color .12s}
+  .artifact:hover .artifact-arrow{color:var(--muted)}
+  .empty{padding:48px 0;text-align:center;color:var(--muted);font-size:13px}
+  .footer-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(14,14,24,.95);backdrop-filter:blur(12px);border-top:1px solid var(--border);padding:10px 20px;display:flex;justify-content:center;align-items:center}
+  .footer-inner{max-width:640px;width:100%;display:flex;justify-content:space-between;align-items:center}
+  .footer-count{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)}
+  .footer-link{font-size:12px;color:var(--muted);text-decoration:none}
+  .footer-link:hover{color:var(--accent)}
+  @media(max-width:480px){header{padding:24px 16px 20px}.filters{padding:12px 16px}.list{padding:4px 16px 80px}.artifact-date{min-width:36px;font-size:10px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="site-name"><span class="dot"></span>Khushi's Lab</div>
+  <div class="site-sub">artifacts, plans, and builds — by Khushi B Lohia</div>
+</header>
+<div class="filters">
+  <button class="filter-btn active" onclick="filter('all',this)">All</button>
+  <button class="filter-btn" onclick="filter('plan',this)">Plans</button>
+  <button class="filter-btn" onclick="filter('reel',this)">Reels</button>
+  <button class="filter-btn" onclick="filter('tool',this)">Tools</button>
+  <button class="filter-btn" onclick="filter('setup',this)">Setup</button>
+</div>
+<div class="list" id="artifact-list"></div>
+<div class="footer-bar">
+  <div class="footer-inner">
+    <span class="footer-count" id="footer-count">— artifacts</span>
+    <a class="footer-link" href="https://linkedin.com/in/blohia" target="_blank">@blohia</a>
+  </div>
+</div>
+<script>
+let activeFilter='all';
+function render(){
+  fetch('/artifacts.json').then(r=>r.json()).then(ARTIFACTS=>{
+    const list=document.getElementById('artifact-list');
+    const filtered=activeFilter==='all'?ARTIFACTS:ARTIFACTS.filter(a=>a.tags.includes(activeFilter));
+    if(!filtered.length){list.innerHTML='<div class="empty">No artifacts in this category yet.</div>';return}
+    const byMonth={};
+    filtered.forEach(a=>{if(!byMonth[a.month])byMonth[a.month]=[];byMonth[a.month].push(a)});
+    let html='';
+    Object.entries(byMonth).forEach(([month,items])=>{
+      html+=`<div class="month-divider">${month}</div>`;
+      items.forEach(a=>{
+        const slug=a.date.replace(/\?\?/g,'').replace(/[^0-9]/g,'');
+        const tagsHtml=a.tags.map(t=>`<span class="tag ${t}">${t}</span>`).join('');
+        html+=`<a class="artifact" href="/${a.id}/" target="_blank">
+          <span class="artifact-date">${a.date.slice(5).replace('-','')||'—'}</span>
+          <div class="artifact-body">
+            <div class="artifact-title">${a.title}<span class="ext">/${a.id}</span></div>
+            <div class="artifact-motive">${a.motive}</div>
+            <div class="artifact-tags">${tagsHtml}</div>
+          </div>
+          <span class="artifact-arrow">›</span>
+        </a>`;
+      });
+    });
+    list.innerHTML=html;
+    document.getElementById('footer-count').textContent=`${filtered.length} artifact${filtered.length!==1?'s':''}`;
+  });
+}
+function filter(tag,btn){
+  activeFilter=tag;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+render();
+</script>
+</body>
+</html>
