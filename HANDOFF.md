@@ -129,6 +129,58 @@ LaunchAgent: restarts on crash, KeepAlive=true
 
 ---
 
+## Telegram Bot — What It Actually Does (Guide)
+
+### How it works under the hood
+
+When you message @KhushiClaudeBot and your laptop is on:
+1. The daemon (Node.js process) receives your message via Telegram polling
+2. It calls `claude -p "your message"` as a subprocess — this is Claude Code CLI running non-interactively
+3. Claude processes it and prints the reply to stdout
+4. The daemon sends that reply back to Telegram
+5. Your message + reply are saved to `~/.claude/telegram-history.json` (last 6 exchanges)
+
+When your laptop is off: Vercel webhook handles it with Haiku via OpenRouter — text only, no history, no tools.
+
+### What it CAN do (laptop mode)
+- Web search and fetch URLs
+- Read files on your laptop (e.g. "read my package.json")
+- Remember last 6 exchanges per session (use /clear to reset)
+- Research, summarise, draft, validate ideas
+- Answer questions with real-time web info
+
+### What it CANNOT do
+- **Use skills** (founder-skill, reel-kits, etc.) — skills only run inside interactive Claude Code sessions on your laptop
+- **Create artifacts or docs** — only interactive sessions can open Claude Docs
+- **Use the Safari skill** — that requires a browser + interactive session
+- **Edit files or run shell commands** — Bash tool removed to prevent macOS permission prompts
+- **Maintain history across daemon restarts** — history file persists but is per-machine
+
+### The permission prompts problem
+
+Two completely different types:
+
+**1. macOS privacy dialogs** ("node wants to access Safari/Photos")
+These are one-time macOS prompts. Fix: `System Settings → Privacy & Security → Automation` — grant Terminal (or whichever app runs node) access. Done once, never again.
+
+**2. Claude Code tool approval dialogs**
+These appear when Claude wants to run a command. Fix: removed Bash from allowed tools, so Claude only has WebSearch/WebFetch/Read — those don't trigger interactive prompts.
+
+### To use skills — use Claude Code directly
+Open your terminal or the Claude Code app and type:
+- `/founder-skill validate this idea: ...`
+- `/reel-kits vibe coding with TypeScript`
+- Any other installed skill
+
+Telegram bot is for on-the-go text queries. Claude Code is for skill invocation and file work.
+
+### Commands in Telegram
+- `/clear` — reset conversation history
+- `/start` — status message
+- Anything else — goes to Claude
+
+---
+
 ## Key file locations
 
 | What | Where |
