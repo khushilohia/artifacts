@@ -1,7 +1,7 @@
 export const config = { runtime: 'edge' };
 
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
+const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY;
 const KHUSHI_CHAT_ID = '9166843110';
 
 const SYSTEM = `You are KhushiClaude, Khushi B Lohia's personal AI assistant on Telegram.
@@ -11,10 +11,10 @@ Her projects: Lumi/Halo (AI product), Friday/Jarvis (personal AI ops), Instagram
 
 Rules:
 - Reply in plain text only — no markdown symbols (no **, no ##, no backticks in prose)
-- Keep replies under 250 words unless she asks for more
+- Keep replies under 250 words unless she explicitly asks for more
 - Be direct and useful — she wants execution, not explanation
-- If a task needs Claude Code (file edits, git, shell commands), say: "This needs Claude Code on your laptop — start a session and paste this task"
-- For drafts, ideas, research, validation, scripts — just do it`;
+- If a task needs Claude Code (file edits, git, shell commands), say: "This needs Claude Code on your laptop"
+- For drafts, ideas, research, validation, reel scripts, captions — just do it`;
 
 async function sendMessage(text) {
   await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
@@ -25,22 +25,25 @@ async function sendMessage(text) {
 }
 
 async function callClaude(userMessage) {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
+  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
-      'x-api-key': ANTHROPIC_KEY,
-      'anthropic-version': '2023-06-01',
-      'content-type': 'application/json',
+      'Authorization': `Bearer ${OPENROUTER_KEY}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': 'https://khushilohia.vercel.app',
+      'X-Title': 'KhushiClaude Bot',
     },
     body: JSON.stringify({
-      model: 'claude-haiku-4-5-20251001',
+      model: 'anthropic/claude-haiku-4-5',
       max_tokens: 1024,
-      system: SYSTEM,
-      messages: [{ role: 'user', content: userMessage }],
+      messages: [
+        { role: 'system', content: SYSTEM },
+        { role: 'user', content: userMessage },
+      ],
     }),
   });
   const data = await res.json();
-  return data?.content?.[0]?.text || 'No response.';
+  return data?.choices?.[0]?.message?.content || 'No response.';
 }
 
 export default async function handler(req) {
@@ -54,21 +57,17 @@ export default async function handler(req) {
     const text = msg?.text?.trim() || '';
     const chatId = String(msg?.chat?.id);
 
-    // Only respond to Khushi's own chat
-    if (chatId !== KHUSHI_CHAT_ID) {
-      return new Response('OK', { status: 200 });
-    }
+    if (chatId !== KHUSHI_CHAT_ID) return new Response('OK', { status: 200 });
 
-    // /start or empty
     if (!text || text === '/start') {
-      await sendMessage('Ready. Send me anything:\n\n• Draft a LinkedIn post about X\n• 3 reel ideas for vibe coding\n• Validate this idea: ...\n• Summarise: [paste text]\n• Write a caption for Instagram\n• What should I build next for CollabX?');
+      await sendMessage('Ready. Send me anything:\n\n• Draft a LinkedIn post about X\n• 3 reel ideas for vibe coding\n• Validate this idea: ...\n• Summarise: [paste text]\n• Write an Instagram caption\n• What should I build next for CollabX?');
       return new Response('OK', { status: 200 });
     }
 
     const reply = await callClaude(text);
     await sendMessage(reply);
   } catch (e) {
-    await sendMessage('Error: ' + e.message);
+    await sendMessage('Something went wrong. Try again.');
   }
 
   return new Response('OK', { status: 200 });
