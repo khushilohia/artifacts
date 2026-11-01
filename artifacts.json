@@ -1,5 +1,18 @@
 [
   {
+    "id": "reel-ops-setup-001",
+    "date": "2026-11-01",
+    "title": "Reel Ops \u2014 Session 001 Setup",
+    "motive": "Complete reel production ops reference: system health, folder structure, capability matrix, Reel 1 plan, and action items for KB Lohia solo reel workflow.",
+    "tags": [
+      "reel",
+      "setup",
+      "tool"
+    ],
+    "url": "https://claude.ai/code/artifact/2d251631-5186-4687-b9fe-e96be24a1cd5",
+    "month": "Nov 2026"
+  },
+  {
     "id": "reel-ops-week1",
     "date": "2026-11-01",
     "title": "Reel Ops \u2014 Week 1",
