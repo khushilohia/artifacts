@@ -1,7 +1,7 @@
 # HANDOFF — Claude Setup Session
 
 **Date:** Oct 31, 2026  
-**Last updated:** Oct 31, 2026 (session 2)  
+**Last updated:** Nov 1, 2026 (session 3)  
 **Session goal:** Set up Claude Code properly — memory, skills, integrations, phone access
 
 ---
@@ -42,12 +42,8 @@
 - `founder-skill` — validate ideas: JTBD, TAM, moat, unfair advantage, MVP, go/no-go
 - `reel-kits` — topic → hook, 30s script, B-roll cues, caption, hashtags, post time
 
-### Superpowers skills (from github.com/obra/superpowers — install pending)
-All 13 skills below are in `/tmp/superpowers/skills/`. Install with:
-```bash
-cp -r /tmp/superpowers/skills/* ~/.claude/skills/
-```
-Or cherry-pick. Most relevant for Khushi's workflow:
+### Superpowers skills (from github.com/obra/superpowers — ✅ installed)
+All 15 skills are live in `~/.claude/skills/`. Most relevant for Khushi's workflow:
 
 | Skill | When it fires |
 |-------|--------------|
@@ -73,21 +69,73 @@ Also in repo: `hooks/hooks.json` (pre-built Claude Code hooks), `hooks/session-s
 
 ## Critical: still needs doing
 
-1. **Regenerate OpenRouter key** — old key was pasted in chat transcript. Update Vercel env var.
-2. **Create `~/.claude/secrets.env`**:
-   ```bash
-   echo 'export TELEGRAM_BOT_TOKEN=your_token_here' > ~/.claude/secrets.env
-   ```
-3. **Load the LaunchAgent**:
-   ```bash
-   launchctl load ~/Library/LaunchAgents/com.khushi.claude-telegram.plist
-   ```
-4. **Install superpowers skills**:
-   ```bash
-   cp -r /tmp/superpowers/skills/* ~/.claude/skills/
-   cp /tmp/superpowers/hooks/hooks.json ~/.claude/  # optional, review first
-   ```
-5. **Test Telegram** — message @KhushiClaudeBot. If daemon is running: full Claude. If not: Haiku.
+All session-2 critical items are now resolved. ✅
+
+---
+
+## Friday & Jarvis & Leon — Status (checked Nov 1, 2026)
+
+### Friday — Voice + Gesture AI (`~/friday/`)
+Python-based personal AI assistant. Uses hand gestures (MediaPipe) + microphone (SpeechRecognition) to control Claude.
+
+**What's built:**
+- `brain.py` — chat via OpenRouter → `anthropic/claude-sonnet-4-5`
+- `voice.py` — mic listening (Google STT) + macOS `say` TTS
+- `gestures.py` — MediaPipe hand tracking (✌️ listen, ✊ cancel, ✋ mute, ☝ confirm)
+- `main.py` — ties it all together; falls back to text mode if no camera
+- `venv/` exists and `requirements.txt` is present
+
+**Status: Set up, NOT running, never fully tested**
+
+Issues / what's incomplete:
+- Never launched since build
+- macOS may prompt for camera + microphone permissions on first run
+- Uses OpenRouter key from `~/friday/.env` (same key as everywhere else)
+- No auto-start — must be run manually: `cd ~/friday && ./run.sh`
+
+**To start:**
+```bash
+cd ~/friday && ./run.sh
+```
+
+---
+
+### Leon — Full AI Assistant Framework (`~/leon/`)
+Open-source Leon AI (v1.0.0-beta.10+dev). A full Node.js + Python framework with skills, tools, bridges, a web UI, and its own server.
+
+**What's built:**
+- Full codebase installed, `node_modules/` present
+- `config.yml` configured: default LLM = `openrouter/anthropic/claude-sonnet-4-5`
+- `LEON_OPENROUTER_API_KEY` set in `~/leon/.env` (same key as Friday)
+- `.leon/` data dir exists (instance ID, cache, profiles)
+- Server built: `server/dist/` present
+
+**Status: Installed, NOT running, abandoned mid-setup**
+
+Issues / what's incomplete:
+- Server never started (port 5366 idle)
+- No known specific bugs found in code — just never launched and tested end-to-end
+- LLM provider set to `openrouter/anthropic/claude-sonnet-4-5` — works if OpenRouter key is valid
+
+**To start:**
+```bash
+cd ~/leon && pnpm start
+# Web UI at http://localhost:1337
+# Server at http://localhost:5366
+```
+
+---
+
+### OpenRouter Key — Where It's Used
+
+| Location | Variable | Purpose |
+|----------|----------|---------|
+| `~/friday/.env` | `OPENROUTER_API_KEY` | Friday voice assistant → Claude |
+| `~/leon/.env` | `LEON_OPENROUTER_API_KEY` | Leon AI framework → Claude |
+| Vercel env (`artifacts-taupe-zeta`) | `OPENROUTER_API_KEY` | Telegram bot cloud fallback (Haiku) |
+| `~/.claude/secrets.env` | `OPENROUTER_API_KEY` | Empty — not set here |
+
+---
 
 ---
 
@@ -206,8 +254,8 @@ Telegram bot is for on-the-go text queries. Claude Code is for skill invocation 
 | n8n | https://n8n.myintellify.ai |
 
 ## Active projects (priority)
-1. Claude setup — LaunchAgent + secrets.env + superpowers install remaining
+1. Claude setup — ✅ complete (memory, skills, Telegram, superpowers all done)
 2. Inova CX @ IntellifyAi — day job, ongoing
 3. CollabX (collabx.dev) — live, side project
 4. Lumi / Halo — next product (run /founder-skill first)
-5. Friday / Jarvis — Telegram daemon is piece one ✓
+5. Friday / Jarvis / Leon — built but never launched; needs first-run testing
