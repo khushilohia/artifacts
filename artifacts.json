@@ -1,28 +1,48 @@
 [
   {
+    "id": "reel-ops-week1",
+    "date": "2026-11-01",
+    "title": "Reel Ops \u2014 Week 1",
+    "motive": "3-reel arc plan (Jarvis, vibe coding, founder story), tool stack (Descript + CapCut), GitHub repos for subtitle automation, and week 1 shoot/edit/post checklist",
+    "tags": [
+      "reel",
+      "plan"
+    ],
+    "url": "https://claude.ai/code/artifact/3f9494cc-30ba-4644-8436-92d068fd620d",
+    "month": "Nov 2026"
+  },
+  {
     "id": "claude-setup-board",
     "date": "2026-10-31",
     "title": "Claude Setup Board",
-    "motive": "Master plan for the entire Claude setup — skills, integrations, model routing, and content pipeline",
-    "tags": ["setup", "tool"],
+    "motive": "Master plan for the entire Claude setup \u2014 skills, integrations, model routing, and content pipeline",
+    "tags": [
+      "setup",
+      "tool"
+    ],
     "url": "https://claude.ai/code/artifact/8d85d88b-3f2e-432b-bb29-76b803ab7c2b",
     "month": "Oct 2026"
   },
   {
     "id": "friday-mission-brief",
     "date": "2026-10-??",
-    "title": "Friday — Mission Brief",
-    "motive": "Mission brief for Friday, the personal AI ops layer — goals, scope, and first workflows",
-    "tags": ["plan"],
+    "title": "Friday \u2014 Mission Brief",
+    "motive": "Mission brief for Friday, the personal AI ops layer \u2014 goals, scope, and first workflows",
+    "tags": [
+      "plan"
+    ],
     "url": "https://claude.ai/artifact/C5nyJJFZgJWGjQCJfyW6P7",
     "month": "Oct 2026"
   },
   {
     "id": "friday-ops-board",
     "date": "2026-10-??",
-    "title": "Friday — Ops Board",
-    "motive": "Operational dashboard for Friday/Jarvis — tasks, workflows, and live status",
-    "tags": ["tool", "plan"],
+    "title": "Friday \u2014 Ops Board",
+    "motive": "Operational dashboard for Friday/Jarvis \u2014 tasks, workflows, and live status",
+    "tags": [
+      "tool",
+      "plan"
+    ],
     "url": "https://claude.ai/artifact/BVFJT5Nq1qXHgBxfcWTnm1",
     "month": "Oct 2026"
   }
