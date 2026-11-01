@@ -1,5 +1,17 @@
 [
   {
+    "id": "reel-session-002",
+    "date": "2026-11-01",
+    "title": "Reel Ops \u2014 Session 002 Handoff",
+    "motive": "Session handoff for Day 0 reel \u2014 all produced clips, skill specs, kit state, and open items for the next editing session.",
+    "tags": [
+      "reel",
+      "setup"
+    ],
+    "url": "https://claude.ai/code/artifact/87a1eeef-63d7-4ddb-b5f5-3def92abd01d",
+    "month": "Nov 2026"
+  },
+  {
     "id": "reel-ops-setup-001",
     "date": "2026-11-01",
     "title": "Reel Ops \u2014 Session 001 Setup",
